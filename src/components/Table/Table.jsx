@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from './Table.module.css'
 import Column from './Column'
 
-const Table = ({columns}) => {
-    // console.log(columns)
+const Table = ({table}) => {
     return (
-        columns
-        ? <div className={classes.table}> {columns.map((column, id) => <Column key={id} column={column}/>)}</div>
+        table
+        ? <div className={classes.table}> {table.map((column, id) => <Column key={id} column={column}/>)}</div>
             : <div className={classes.table}></div>
     )
 };

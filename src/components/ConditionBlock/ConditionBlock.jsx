@@ -7,40 +7,34 @@ const ConditionBlock = () => {
     const [NodeNumber, setNodeNumber] = useState(0);
     const [x, setX] = useState();
 
-    const [cells, setCells] = useState(
-        [
-            [
-                {id: 0, title: 'i'},
-                {id: 1, title: 'узлы x'},
-                {id: 2, title: 'y = f(x)'}
-            ]
+    const initState = {columnId: 0, cells: [
+            {id: 0, title: 'i'},
+            {id: 1, title: 'узлы x'},
+            {id: 2, title: 'y = f(x)'}
         ]
-    );
+    }
 
-    const [columns, setColumns] = useState(
-        []
-    );
+    const [table, setTable] = useState([
+        initState
+    ]);
+
+    const [columns, setColumns] = useState([]);
+
+    const [cells, setCells] = useState({});
 
     const CreateTable = (NodeNumber) => {
-        setColumns([{id: 0, cells: cells[0]}])
-        for (let i = 0; i < NodeNumber; i++) {
-            setCells([
-                ...cells,
-                [
-                    {id: 0, title: i},
-                    {id: 1, title: {Input}},
-                    {id: 2, title: {Input}}
-                ]
-            ]);
-
-            setColumns(
-                [
-                    ...columns,
-                    {id: i, cells: cells[i]}
-                ]
-            );
-        };
-    };
+        setTable([initState]);
+        for (let i = 1; i <= NodeNumber; i++) {
+            setTable([...table,
+                {columnId: i, cells: [
+                        {id: 0, title: i-1},
+                        {id: 1, title: {Input}},
+                        {id: 2, title: {Input}}
+                    ]
+                }
+            ])
+        }
+    }
 
     return (
         <div className={classes.condition__block}>
@@ -51,13 +45,13 @@ const ConditionBlock = () => {
                     type="number"
                     min='0' max='10'
                     className={classes.node__number}
-                    value={NodeNumber}
+                    // value={NodeNumber}
                     onChange={e => {
+                        // setNodeNumber(e.target.value)
                         CreateTable(e.target.value)
-                        setNodeNumber(e.target.value)
                     }}
                 /> узлах: </p>
-                <Table columns={columns}/>
+                <Table table={table}/>
                 <p> Построить для <b> y = f(x) </b> интерполяционный полином Лагранжа и, пользуясь им, приближенно найти значение <b> у </b> в точке <b> x = </b>
                 <Input
                     type="number"
