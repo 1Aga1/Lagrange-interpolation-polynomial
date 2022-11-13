@@ -4,9 +4,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>Построение интерполяционного полинома Жегалкина</title>
 </head>
 <body>
-    
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <h1 class="content__title">Построение интерполяционного полинома Жегалкина</h1>
+                <div class="condition__block">
+                    <h3 class="condition__title">Условие</h3>
+                    <div class="condition__text">
+                        <p>Функция <b> y = f(x) </b> задана таблично своими значениями в
+                        <input class="node__number" type="number" min="0" max="10">
+                        узлах: </p>
+
+                        <div class="table"></div>
+
+                        <p> Построить для <b> y = f(x) </b> интерполяционный полином Лагранжа и, пользуясь им, приближенно найти значение <b> у </b> в точке <b> x = </b>
+                        <input class="x__value" type="number">, которой нет среди узлов. </p>
+                    </div>
+                    <button class="build__btn">Построить</button>
+                </div>
+                <div class="result__block hidden">
+                    <h3 class="result__title">Результат построения</h3>
+                    <div class="result__text">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+    crossorigin="anonymous">
+    </script>
+    <script src="static/js/index.js"></script>
 </body>
 </html>
