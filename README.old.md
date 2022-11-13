@@ -1,2 +1,0 @@
-# Lagrange interpolation polynomial
- 
