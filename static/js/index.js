@@ -16,8 +16,11 @@ $(document).ready(function() {
     });
 
     $('.build__btn').click(function() {
-        MathJax.startup.defaultReady();
-        $('.result__text').empty();
+        MathJax.startup.defaultReady(); // Запускаем MathJax
+
+        $('#formula').empty();
+        $('#result').empty();
+
         var nodes = [];
 
         if ($('.table').children().length) {
@@ -38,63 +41,71 @@ $(document).ready(function() {
                 }
             });
 
-            var formula = `
-            <p>
-                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" id="formula">
-                    <mrow>
-                        <mi>L</mi>
-                        <mi>(</mi>
-                        <mi>x</mi>
-                        <mi>)</mi>
-                        <mi>=</mi>
-                    </mrow> 
-                `
+            var x = $('.x__value').val();
+
+            var formula = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mi>(</mi><mi>x</mi><mi>)</mi><mi>=</mi></mrow>`
+            var result = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mi>(</mi><mi>${x}</mi><mi>)</mi><mi>=</mi></mrow>`
+
             for (let i = 0; i < nodes.length; i++) {
                 formula += `<mrow class="node ${i}">`
+                result += `<mrow class="node ${i}">`
 
                 if (i == 0) {
                     formula += `<mi>${nodes[i]['nodeValue']}</mi>` 
+                    result += `<mi>${nodes[i]['nodeValue']}</mi>` 
                 }
                 else if (i != 0 && nodes[i]['nodeValue'] >= 0) {
                     formula += `<mi>+</mi><mi>${nodes[i]['nodeValue']}</mi>`         
+                    result += `<mi>+</mi><mi>${nodes[i]['nodeValue']}</mi>`         
                 }
                 else if (i != 0 && nodes[i]['nodeValue'] <= 0) {
                     formula += `<mi>-</mi><mi>${-nodes[i]['nodeValue']}</mi>`         
+                    result += `<mi>-</mi><mi>${-nodes[i]['nodeValue']}</mi>`         
                 }
 
                 formula += `<mfrac class="node ${i}"> <mrow class="numerator ${i}">` 
+                result += `<mfrac class="node ${i}"> <mrow class="numerator ${i}">` 
 
                 // Генерация числителя
                 for (let j = 0; j < nodes.length; j++) {
                     if (i != j) {
                         if (nodes[j]['node'] >= 0) {
                             formula += `<mi>(</mi><mi>x</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
+                            result += `<mi>(</mi><mi>${x}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
                         }
                         else {
                             formula += `<mi>(</mi><mi>x</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
+                            result += `<mi>(</mi><mi>${x}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
                         }
                     };
                 };
 
                 formula += `</mrow> <mrow class="denominator ${i}">`
+                result += `</mrow> <mrow class="denominator ${i}">`
 
                 // Генерация знаменателя
                 for (let j = 0; j < nodes.length; j++) {
                     if (i != j) {
                         if (nodes[j]['node'] >= 0) {
                             formula += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
+                            result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
                         }
                         else {
                             formula += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
+                            result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
                         }
                     };
                 };
+
                 formula += `</mrow></mfrac></mrow>`
+                result += `</mrow></mfrac></mrow>`
             };
      
-            formula += `</math></p>`
+            formula += `</math>`
+            result += `</math>`
             
-            $('.result__text').append(formula);
+            $('#formula').append(formula);
+            $('#result').append(result);
         };
     });
 });
