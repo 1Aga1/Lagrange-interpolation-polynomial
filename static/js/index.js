@@ -19,6 +19,7 @@ $(document).ready(function() {
         MathJax.startup.defaultReady(); // Запускаем MathJax
 
         $('#formula').empty();
+        $('#formula_result').empty();
         $('#result').empty();
 
         var nodes = [];
@@ -44,68 +45,91 @@ $(document).ready(function() {
             var x = $('.x__value').val();
 
             var formula = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mi>(</mi><mi>x</mi><mi>)</mi><mi>=</mi></mrow>`
-            var result = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mi>(</mi><mi>${x}</mi><mi>)</mi><mi>=</mi></mrow>`
+            var formula_result = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mi>(</mi><mi>${x}</mi><mi>)</mi><mi>=</mi></mrow>`
+            var result = 0;
 
             for (let i = 0; i < nodes.length; i++) {
                 formula += `<mrow class="node ${i}">`
-                result += `<mrow class="node ${i}">`
+                formula_result += `<mrow class="node ${i}">`
 
                 if (i == 0) {
                     formula += `<mi>${nodes[i]['nodeValue']}</mi>` 
-                    result += `<mi>${nodes[i]['nodeValue']}</mi>` 
+                    formula_result += `<mi>${nodes[i]['nodeValue']}</mi>` 
                 }
                 else if (i != 0 && nodes[i]['nodeValue'] >= 0) {
                     formula += `<mi>+</mi><mi>${nodes[i]['nodeValue']}</mi>`         
-                    result += `<mi>+</mi><mi>${nodes[i]['nodeValue']}</mi>`         
+                    formula_result += `<mi>+</mi><mi>${nodes[i]['nodeValue']}</mi>`         
                 }
                 else if (i != 0 && nodes[i]['nodeValue'] <= 0) {
                     formula += `<mi>-</mi><mi>${-nodes[i]['nodeValue']}</mi>`         
-                    result += `<mi>-</mi><mi>${-nodes[i]['nodeValue']}</mi>`         
+                    formula_result += `<mi>-</mi><mi>${-nodes[i]['nodeValue']}</mi>`         
                 }
 
                 formula += `<mfrac class="node ${i}"> <mrow class="numerator ${i}">` 
-                result += `<mfrac class="node ${i}"> <mrow class="numerator ${i}">` 
+                formula_result += `<mfrac class="node ${i}"> <mrow class="numerator ${i}">` 
 
                 // Генерация числителя
+                var numerator = 1;
                 for (let j = 0; j < nodes.length; j++) {
                     if (i != j) {
                         if (nodes[j]['node'] >= 0) {
                             formula += `<mi>(</mi><mi>x</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
-                            result += `<mi>(</mi><mi>${x}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
+                            formula_result += `<mi>(</mi><mi>${x}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
                         }
                         else {
                             formula += `<mi>(</mi><mi>x</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
-                            result += `<mi>(</mi><mi>${x}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
+                            formula_result += `<mi>(</mi><mi>${x}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
                         }
+                        numerator *= (x - nodes[j]['node']);
                     };
                 };
 
                 formula += `</mrow> <mrow class="denominator ${i}">`
-                result += `</mrow> <mrow class="denominator ${i}">`
+                formula_result += `</mrow> <mrow class="denominator ${i}">`
 
                 // Генерация знаменателя
+                var denominator = 1;
                 for (let j = 0; j < nodes.length; j++) {
                     if (i != j) {
                         if (nodes[j]['node'] >= 0) {
                             formula += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
-                            result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
+                            formula_result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>-</mi><mi>${nodes[j]['node']}</mi><mi>)</mi>`
                         }
                         else {
                             formula += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
-                            result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
+                            formula_result += `<mi>(</mi><mi>${nodes[i]['node']}</mi><mi>+</mi><mi>${-nodes[j]['node']}</mi><mi>)</mi>`
                         }
+                        denominator *= nodes[i]['node'] - nodes[j]['node'];
                     };
                 };
 
+                result += nodes[i]['nodeValue'] * (numerator / denominator);
+
                 formula += `</mrow></mfrac></mrow>`
-                result += `</mrow></mfrac></mrow>`
+                formula_result += `</mrow></mfrac></mrow>`
             };
-     
+
+            result = result.toFixed(2);
+            
+            var result_block = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+            <mrow>
+                <mi>L</mi>
+                <mi>(</mi>
+                <mi>${x}</mi>
+                <mi>)</mi>
+                <mi>=</mi>
+            </mrow>
+            <mrow>
+                <mi> ${result}</mi>
+            </mrow>
+            `;
+
             formula += `</math>`
-            result += `</math>`
+            formula_result += `</math>`
             
             $('#formula').append(formula);
-            $('#result').append(result);
+            $('#formula_result').append(formula_result);
+            $('#result').append(result_block);
         };
     });
 });
