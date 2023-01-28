@@ -6,3 +6,5 @@ The algorithm was developed for the purposes of the educational process. It impl
 3. Node values
 
 The algorithm builds a formula depending on the entered X and outputs the result of the calculation using the formula
+
+https://1aga1.github.io/lagrange-interpolation-polynomial/
